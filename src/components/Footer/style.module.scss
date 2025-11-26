@@ -12,6 +12,8 @@
   width: 1400px;
   display: flex;
   flex-direction: column;
+  padding: 12px;
+
   @include respond("tablet") {
     justify-content: center;
     align-items: center;
@@ -20,7 +22,7 @@
 }
 
 .footer__middle {
-  @include flex(space-between, center, 0px);
+  @include flex(space-between, center, 10px);
   padding: 15px 0px;
   @include respond("tablet") {
     text-align: center;
@@ -37,14 +39,14 @@
 }
 
 .footer__bottom {
-  @include flex(space-between, center, 0px);
+  @include flex(space-between, center, 10px);
   @include respond("tablet") {
     flex-direction: column;
     gap: 10px;
   }
   padding: 15px 0px;
   .footer__options {
-    @include flex(center, center, 30px);
+    @include flex(center, center, 20px);
     @include respond("tablet") {
       gap: 20px;
     }

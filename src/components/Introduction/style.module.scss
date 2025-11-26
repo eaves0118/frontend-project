@@ -44,7 +44,7 @@
 }
 
 .intro__img {
-  width: 878px;
+  width: 100%;
   height: 833px;
   object-fit: contain;
   @include respond("tablet") {
@@ -60,7 +60,7 @@
 
 .intro__btns {
   @include flex(center, center, 10px);
-  width: 400px;
+  width: 300px;
   margin-top: 15px;
 }
 
