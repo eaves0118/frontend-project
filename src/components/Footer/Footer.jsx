@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./style.module.scss";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
 const Footer = () => {
   return (
     <footer className={styles.wrapper}>
@@ -18,14 +20,26 @@ const Footer = () => {
             </p>
           </div>
           <div className={styles.footer__middle__center}>
-            <p>Email: care@doctor4u.vn</p>
-            <p>
-              Tổng đài: 024 32 212 212 | Hotline: 0934 38 12 12 - 0936 56 12 12
-            </p>
+            <span className={styles.address}>
+              <MdEmail /> <p>Email: care@doctor4u.vn</p>
+            </span>
+            <span className={styles.address}>
+              <FaPhoneAlt />
+              <p>
+                Tổng đài: 024 32 212 212 | Hotline: 0934 38 12 12 - 0936 56 12
+                12
+              </p>
+            </span>
           </div>
-          <div className={styles.footer__middle__end}></div>
         </div>
-        <div className={styles.footer__bottom}></div>
+        <div className={styles.footer__bottom}>
+          <p>Copyright © 2024 Công ty Cổ phần Công nghệ Bác Sỹ Bên Bạn</p>
+          <div className={styles.footer__options}>
+            <span>Điều khoản dịch vụ</span>
+            <span>Chính sách bảo mật</span>
+            <span>Chăm sóc khách hàng</span>
+          </div>
+        </div>
       </div>
     </footer>
   );
