@@ -1,0 +1,82 @@
+.footer {
+  background-color: #0077cc;
+  color: #fff;
+  padding: 20px 0 10px; // giảm padding
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem; // giảm font tổng thể
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.footerContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px; // giảm khoảng cách
+  padding: 0 15px;
+}
+
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+
+  .logo {
+    width: 40px; // giảm logo
+    height: auto;
+  }
+
+  .name {
+    font-size: 1.2rem; // giảm chữ
+    font-weight: bold;
+  }
+}
+
+.footerInfo {
+  line-height: 1.4;
+}
+
+.footerMenu {
+  h4 {
+    margin-bottom: 6px;
+    font-size: 1rem; // giảm chữ
+    font-weight: bold;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    li {
+      margin-bottom: 4px; // giảm khoảng cách
+    }
+  }
+}
+
+.footerSocial {
+  h4 {
+    margin-bottom: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .socialIcons {
+    display: flex;
+    gap: 8px; // giảm khoảng cách icon
+    font-size: 1rem; // giảm icon
+  }
+}
+
+.footerCopy {
+  text-align: center;
+  font-size: 0.75rem; // giảm chữ
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  padding-top: 5px;
+}

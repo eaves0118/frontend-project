@@ -1,0 +1,177 @@
+// components/Pagination/style.module.scss
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 30px 0;
+  font-family: "Roboto", sans-serif;
+}
+
+.navBtn {
+  background-color: #0077b6; // xanh y tế
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.navBtn:disabled {
+  background-color: #a1cbe6;
+  cursor: not-allowed;
+}
+
+.navBtn:hover:not(:disabled) {
+  background-color: #0096c7;
+}
+
+.pageList {
+  display: flex;
+  gap: 6px;
+}
+
+.pageItem {
+  min-width: 34px;
+  height: 34px;
+  background-color: #e0f0ff;
+  color: #0077b6;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.pageItem:hover {
+  background-color: #0096c7;
+  color: #fff;
+}
+
+.pageItem.active {
+  background-color: #0077b6;
+  color: #fff;
+}
+
+.jumpBox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+}
+
+.jumpBox input {
+  width: 60px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #0077b6;
+  outline: none;
+}
+
+.jumpBox input:focus {
+  border-color: #0096c7;
+}
+
+.jumpBox button {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #0077b6;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.jumpBox button:hover {
+  background-color: #0096c7;
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pageList {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .jumpBox {
+    margin-left: 0;
+  }
+}
+.paginationWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navBtn {
+  padding: 6px 12px;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  &:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+}
+
+.pageList {
+  display: flex;
+  gap: 4px;
+}
+
+.pageItem {
+  padding: 6px 10px;
+  border: 1px solid #0077cc;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  &.active {
+    background-color: #0077cc;
+    color: white;
+  }
+}
+
+.jumpBox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  input {
+    width: 60px;
+    padding: 4px 6px;
+    border: 1px solid #0077cc;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  button {
+    padding: 4px 8px;
+    border: none;
+    background-color: #0077cc;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}

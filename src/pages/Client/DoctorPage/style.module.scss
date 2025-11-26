@@ -1,0 +1,199 @@
+// style.module.scss
+
+.container {
+  padding: 2rem;
+  background-color: #f5f9fc; // nền trắng-xanh nhạt
+  min-height: 100vh;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0b3d91; // xanh đậm
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* ---------------- FilterBar ---------------- */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+
+  input,
+  select {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #cfd8dc;
+    font-size: 0.95rem;
+    transition: 0.2s;
+  }
+
+  input:focus,
+  select:focus {
+    outline: none;
+    border-color: #0b3d91;
+  }
+}
+
+/* ---------------- DoctorGrid ---------------- */
+
+/* Doctor.module.scss */
+
+/* Doctor.module.scss */
+
+/* ---------- Grid danh sách bác sĩ ---------- */
+.doctorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // 3 card/row desktop
+  gap: 24px; // tăng khoảng cách giữa các card
+  margin: 20px auto; // căn giữa grid
+  justify-content: center; // căn giữa các card nếu không đủ full row
+  max-width: 1200px; // giới hạn chiều rộng tổng thể
+  padding: 0 16px; // padding hai bên
+}
+
+/* ---------- Card bác sĩ ---------- */
+.doctorCard {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 16px; // tăng padding
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .avatarBox {
+    width: 100px; // tăng avatar
+    height: 100px;
+    margin-bottom: 12px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+
+  .doctorName {
+    font-weight: 700;
+    font-size: 1.1rem; // tăng font
+    margin-bottom: 4px;
+  }
+
+  .specialty {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .shortDesc {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 12px;
+  }
+
+  .detailBtn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .doctorGrid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .doctorCard {
+    padding: 14px;
+    .avatarBox {
+      width: 90px;
+      height: 90px;
+    }
+    .doctorName {
+      font-size: 1rem;
+    }
+    .specialty {
+      font-size: 0.9rem;
+    }
+    .shortDesc {
+      font-size: 0.8rem;
+    }
+    .detailBtn {
+      padding: 7px 12px;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .doctorGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  .doctorCard {
+    padding: 12px;
+    .avatarBox {
+      width: 80px;
+      height: 80px;
+    }
+    .doctorName {
+      font-size: 0.95rem;
+    }
+    .specialty {
+      font-size: 0.85rem;
+    }
+    .shortDesc {
+      font-size: 0.75rem;
+    }
+    .detailBtn {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .doctorGrid {
+    grid-template-columns: 1fr; // 1 card/row
+    gap: 8px;
+  }
+  .doctorCard {
+    padding: 10px;
+    .avatarBox {
+      width: 70px;
+      height: 70px;
+    }
+    .doctorName {
+      font-size: 0.9rem;
+    }
+    .specialty {
+      font-size: 0.8rem;
+    }
+    .shortDesc {
+      font-size: 0.7rem;
+    }
+    .detailBtn {
+      padding: 5px 10px;
+      font-size: 0.75rem;
+    }
+  }
+}

@@ -1,0 +1,63 @@
+/* style.module.scss */
+
+/* Container thanh filter */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+  justify-content: center; // căn giữa thanh lọc
+  align-items: center;
+}
+
+/* Ô tìm kiếm */
+.searchInput {
+  padding: 10px 14px;
+  border: 1px solid #cfe2ff; // xanh nhạt
+  border-radius: 8px;
+  font-size: 0.95rem;
+  min-width: 200px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #0d6efd; // xanh y khoa
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+  }
+}
+
+/* Select box */
+.selectBox {
+  padding: 10px 14px;
+  border: 1px solid #cfe2ff;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  min-width: 180px;
+  background-color: #ffffff;
+  color: #212529;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+  }
+
+  option {
+    color: #212529;
+  }
+}
+
+/* Responsive: khi màn hình nhỏ hơn 600px */
+@media (max-width: 600px) {
+  .filterBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchInput,
+  .selectBox {
+    width: 100%;
+  }
+}

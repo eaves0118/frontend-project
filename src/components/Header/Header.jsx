@@ -5,8 +5,8 @@ import Logo from "@images/logo.01.svg";
 import { GrMenu } from "react-icons/gr";
 const Header = () => {
   const nav = [
-    { content: "Trang chủ", href: "#" },
-    { content: "Giới thiệu dịch vụ", href: "#" },
+    { content: "Trang chủ", href: "/" },
+    { content: "Giới thiệu dịch vụ", href: "/doctors" },
     { content: "Đội ngũ bác sĩ", href: "#" },
     { content: "Về chúng tôi", href: "#" },
     { content: "Liên hệ", href: "#" },
