@@ -24,7 +24,7 @@ const Header = () => {
 
   return (
     <section className={styles.header}>
-      <Container fluid className={styles.header__container}>
+      <div className={styles.header__container}>
         <div className={styles.header__start}>
           <a href="#">
             <img className={styles.header__start__img} src={Logo} alt="" />
@@ -55,7 +55,7 @@ const Header = () => {
         <div className={styles.mobile__menu} onClick={handleOpenToggle}>
           <GrMenu />
         </div>
-      </Container>
+      </div>
       {isOpen && (
         <div className={styles.header__menu__mobile}>
           <ul className={`p-0 m-0 ${styles.header__mobile__nav}`}>
