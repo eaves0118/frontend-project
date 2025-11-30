@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./style.module.scss";
+import { Link } from "react-router-dom";
+
 import { AiFillDashboard } from "react-icons/ai";
 import { FaUser } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
@@ -7,6 +9,7 @@ import { MdAnalytics } from "react-icons/md";
 import { BiSolidReport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { BsCalendarDateFill } from "react-icons/bs";
+
 const Sidebar = () => {
   return (
     <section className={styles.sidebar} id="sidebar">
@@ -17,54 +20,57 @@ const Sidebar = () => {
       </div>
 
       <nav className={styles.navMenu}>
-        <div className={`${styles.navItem} ${styles.active}`}>
+        <Link
+          to="bang-dieu-khien"
+          className={`${styles.navItem} ${styles.active}`}
+        >
           <span className={styles.navIcon}>
             <AiFillDashboard />
           </span>
           <span>Dashboard</span>
-        </div>
+        </Link>
 
-        <div className={styles.navItem}>
+        <Link to="benh-nhan" className={styles.navItem}>
           <span className={styles.navIcon}>
             <FaUser />
           </span>
           <span>Patients</span>
-        </div>
+        </Link>
 
-        <div className={styles.navItem}>
+        <Link to="bac-si" className={styles.navItem}>
           <span className={styles.navIcon}>
             <FaUserDoctor />
           </span>
           <span>Doctors</span>
-        </div>
+        </Link>
 
-        <div className={styles.navItem}>
+        <Link to="thong-ke" className={styles.navItem}>
           <span className={styles.navIcon}>
             <MdAnalytics />
           </span>
           <span>Analytics</span>
-        </div>
+        </Link>
 
-        <div className={styles.navItem}>
+        <Link to="lich-hen" className={styles.navItem}>
           <span className={styles.navIcon}>
             <BsCalendarDateFill />
           </span>
           <span>Appointment</span>
-        </div>
+        </Link>
 
-        <div className={styles.navItem}>
+        <Link to="bao-cao" className={styles.navItem}>
           <span className={styles.navIcon}>
             <BiSolidReport />
           </span>
           <span>Reports</span>
-        </div>
+        </Link>
 
-        <div className={styles.navItem}>
+        <Link to="cai-dat" className={styles.navItem}>
           <span className={styles.navIcon}>
             <IoMdSettings />
           </span>
           <span>Settings</span>
-        </div>
+        </Link>
       </nav>
     </section>
   );
