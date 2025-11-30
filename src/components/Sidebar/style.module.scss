@@ -1,0 +1,49 @@
+.sidebar {
+    width: 250px;
+    background: #111827;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebarHeader {
+    margin-bottom: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logoIcon {
+    font-size: 22px;
+}
+
+.navMenu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.navItem:hover {
+    background: #1f2937;
+}
+
+.active {
+    background: #374151;
+}
+
+.navIcon {
+    font-size: 18px;
+}
