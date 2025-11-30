@@ -9,6 +9,7 @@ import { MdAnalytics } from "react-icons/md";
 import { BiSolidReport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { BsCalendarDateFill } from "react-icons/bs";
+import { BiSolidMessageRoundedDetail } from "react-icons/bi";
 
 const Sidebar = () => {
   return (
@@ -29,6 +30,12 @@ const Sidebar = () => {
           </span>
           <span>Dashboard</span>
         </Link>
+        <Link to="chat" className={styles.navItem}>
+          <span className={styles.navIcon}>
+            <BiSolidMessageRoundedDetail />
+          </span>
+          <span>Message</span>
+        </Link>
 
         <Link to="benh-nhan" className={styles.navItem}>
           <span className={styles.navIcon}>
@@ -44,18 +51,11 @@ const Sidebar = () => {
           <span>Doctors</span>
         </Link>
 
-        <Link to="thong-ke" className={styles.navItem}>
-          <span className={styles.navIcon}>
-            <MdAnalytics />
-          </span>
-          <span>Analytics</span>
-        </Link>
-
-        <Link to="lich-hen" className={styles.navItem}>
+        <Link to="lich-lam-viec" className={styles.navItem}>
           <span className={styles.navIcon}>
             <BsCalendarDateFill />
           </span>
-          <span>Appointment</span>
+          <span>Schedule</span>
         </Link>
 
         <Link to="bao-cao" className={styles.navItem}>

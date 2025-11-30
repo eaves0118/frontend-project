@@ -5,7 +5,7 @@ import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { BsBox2Fill } from "react-icons/bs";
 import { FaChartLine } from "react-icons/fa";
 import styles from "./style.module.scss";
-import RecentOrdersTable from "./RecentOrdersTable/RecentOrdersTable";
+
 const Dashboard = () => {
   return (
     <div className={styles.dashboard__container}>
@@ -35,9 +35,7 @@ const Dashboard = () => {
           percent={"12.3"}
         />
       </div>
-      <div>
-        <RecentOrdersTable />
-      </div>
+      <div></div>
       <div></div>
     </div>
   );

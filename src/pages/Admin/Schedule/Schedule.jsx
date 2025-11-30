@@ -1,7 +1,7 @@
 import React from "react";
 
-const Appointments = () => {
+const Schedule = () => {
   return <div>this is appointment</div>;
 };
 
-export default Appointments;
+export default Schedule;
