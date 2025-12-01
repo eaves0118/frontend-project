@@ -1,17 +1,8 @@
-<<<<<<< HEAD
-import React from "react";
-=======
 import React, { useState } from "react";
->>>>>>> master
 import Input from "@components/Input/Input";
 import Button from "@components/Button/Button";
 import Illustration from "@images/draw.png";
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
-<<<<<<< HEAD
-import { Link } from "react-router-dom";
-import styles from "./style.module.scss";
-const Register = () => {
-=======
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./style.module.scss";
 
@@ -65,13 +56,13 @@ const Register = () => {
         password: form.password,
         profile: {
           fullName: form.fullName,
-          gender: "Other", 
+          gender: "Other",
         },
       };
 
       const res = await api.register(payload);
       console.log("Register Success:", res);
-      const { accessToken } = res.data; 
+      const { accessToken } = res.data;
       if (accessToken) {
         setAccessToken(accessToken);
         localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -81,7 +72,6 @@ const Register = () => {
         alert("Đăng ký thành công! Vui lòng đăng nhập.");
         navigate("/dang-nhap");
       }
-
     } catch (error) {
       console.error("Register Error:", error);
       const message = error.response?.data?.message || "Đăng ký thất bại!";
@@ -91,7 +81,6 @@ const Register = () => {
     }
   };
 
->>>>>>> master
   return (
     <div className={styles.auth}>
       <div className={styles.auth__illustration}>
@@ -99,11 +88,9 @@ const Register = () => {
       </div>
 
       <div className={styles.auth__content}>
-<<<<<<< HEAD
-        <form className={styles.auth__form}>
+        <form className={styles.auth__form} onSubmit={handleRegister}>
           <div className={styles.auth__social}>
             <h3 className="m-0">Đăng ký với</h3>
-
             <div className={styles.auth__social_list}>
               <div className={styles.auth__social_item}>
                 <FaFacebookF />
@@ -114,36 +101,11 @@ const Register = () => {
               <div className={styles.auth__social_item}>
                 <FaLinkedinIn />
               </div>
-=======
-        <form className={styles.auth__form} onSubmit={handleRegister}>
-          <div className={styles.auth__social}>
-            <h3 className="m-0">Đăng ký với</h3>
-            <div className={styles.auth__social_list}>
-              <div className={styles.auth__social_item}><FaFacebookF /></div>
-              <div className={styles.auth__social_item}><FaTwitter /></div>
-              <div className={styles.auth__social_item}><FaLinkedinIn /></div>
->>>>>>> master
             </div>
           </div>
 
           <div className={styles.auth__divider}>hoặc</div>
 
-<<<<<<< HEAD
-          <Input placeholder="Email address" />
-          <Input type={"password"} placeholder="Password" />
-          <Input type={"password"} placeholder="Confirm password" />
-
-          <div className={styles.auth__actions_regis}>
-            <input type="checkbox" />
-            <p className="m-0">Tôi đã đọc và đồng ý các điều khoản</p>
-          </div>
-
-          <Button content="Đăng ký" />
-
-          <div className={styles.auth__register}>
-            <span>Đã có tài khoản?</span>
-
-=======
           <Input
             placeholder="Họ và tên"
             name="fullName"
@@ -151,7 +113,7 @@ const Register = () => {
             onChange={handleChange}
             required
           />
-          
+
           <Input
             placeholder="Tên đăng nhập (Username)"
             name="username"
@@ -188,8 +150,8 @@ const Register = () => {
           />
 
           <div className={styles.auth__actions_regis}>
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={agree}
               onChange={(e) => setAgree(e.target.checked)}
             />
@@ -200,7 +162,6 @@ const Register = () => {
 
           <div className={styles.auth__register}>
             <span>Đã có tài khoản?</span>
->>>>>>> master
             <Link to="/dang-nhap" className={styles.auth__register_link}>
               Đăng nhập
             </Link>
@@ -211,8 +172,4 @@ const Register = () => {
   );
 };
 
-<<<<<<< HEAD
 export default Register;
-=======
-export default Register;
->>>>>>> master
