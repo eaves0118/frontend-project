@@ -1,6 +1,7 @@
 import ClientLayout from "@components/Layouts/ClientLayout/ClientLayout";
 import AdminLayout from "@components/Layouts/AdminLayout/AdminLayout";
 import HomePage from "@pages/Client/HomePage/HomePage";
+import AboutUsPage from "@pages/Client/HomePage/AboutUsPage";   
 import Dashboard from "@pages/Admin/Dashboard/Dashboard";
 import Patients from "@pages/Admin/Patients/Patients";
 import Doctors from "@pages/Admin/Doctors/Doctors";
@@ -10,12 +11,16 @@ import Settings from "@pages/Admin/Settings/Settings";
 import Login from "@components/Login/Login";
 import Register from "@components/Register/Register";
 import ProtectRoutes from "./ProtectRoutes";
+
 const routes = [
   {
     path: "/",
     element: <ClientLayout />,
     children: [
       { path: "", element: <HomePage /> },
+      
+    
+      { path: "vechungtoi", element: <AboutUsPage /> },  
       { path: "dang-nhap", element: <Login /> },
       { path: "dang-ky", element: <Register /> },
     ],

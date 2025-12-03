@@ -1,0 +1,158 @@
+@import "@styles/_variables.module.scss";
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.title span { color: $color-primary; }
+
+/*1. SECTION SỨ MỆNH */
+.missionSection {
+  position: relative;
+  width: 100%;
+  padding-top: 38.08%;                  
+  min-height: 600px;
+  background: url('@images/background.png') center/cover no-repeat;
+  overflow: hidden;
+}
+
+.missionImg {
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  transform: translateY(-50%);
+  width: clamp(300px, 35%, 500px);
+}
+.missionGrid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 5%;
+  z-index: 1;
+}
+
+.missionText h1 {
+  font-weight: $font-weight-bold;
+  font-size: clamp(2.6rem, 6vw, 4.8rem);   /* nhỏ hơn 1 chút, thanh lịch hơn */
+  line-height: 1.15;
+  color: $color-blue-dark;                 /* “Sứ mệnh của” màu xanh đậm */
+  margin: 0 0 1.8rem;
+
+  span {
+    color: #0066cc;                        /* Doctor4U = xanh nước biển nổi bật */
+  }
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.missionText p {
+  color: #1a1a1a;                          /* màu tối sắc nét, đọc rõ nhất trên nền xanh biển */
+  font-size: clamp($font-size-md, 2.4vw, $font-size-lg);
+  line-height: 1.9;
+  max-width: 720px;
+  margin: 0;
+}
+
+.missionSection::after {
+  background: rgba(255,255,255,0.88);      /* tăng nhẹ độ trắng cho chữ siêu rõ */
+}
+
+
+
+/* 2. Vì sao chọn */
+/* 4 ô luôn nằm 1 hàng trên màn lớn, xuống dòng đẹp trên mobile */
+
+  span {
+    color: #0066cc;                        
+  }
+
+.valuesSection { 
+  padding: 100px 0; 
+  text-align: center; 
+  background: #f8f9fa;
+}
+
+.sectionTitle { 
+  font-size: 2.8rem; 
+  margin-bottom: 60px; 
+}
+
+.valuesGrid { 
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);   /* Luôn 4 cột */
+  gap: 30px;
+}
+
+.valueCard {
+  background: white; 
+  border-radius: 16px; 
+  overflow: hidden; 
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s;
+  &:hover { transform: translateY(-10px); }
+  img { width: 100%; height: 220px; object-fit: cover; }
+  h3 { padding: 20px 20px 10px; color: #007bff; font-size: 1.3rem; }
+  p { padding: 0 20px 30px; color: #555; font-size: 1rem; }
+}
+
+
+/* 3. FAQ */
+.faqSection { padding: 100px 0; background: #f0f8ff; }
+.faqList { max-width: 900px; margin: 0 auto; }
+.faqItem {
+  background: white; margin-bottom: 15px; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05); border-left: 5px solid #007bff;
+  summary { padding: 20px; font-weight: 600; cursor: pointer; font-size: 1.1rem; }
+  p { padding: 0 20px 20px; color: #444; margin: 0; }
+}
+
+/* 4. Giá trị cốt lõi */
+.coreValuesSection { padding: 100px 0; }
+.coreGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; text-align: center; }
+.coreCard {
+  background: white; padding: 40px 20px; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  h3 { color: #007bff; margin-bottom: 15px; }
+}
+
+/* 5. Liên hệ - Nền xanh lá */
+.contactSection {
+  background: linear-gradient(135deg, #e0f7fa, #c8e6c9), url('/src/images/contact-bg.jpg');
+  background-size: cover; position: relative; padding: 120px 0; color: #333;
+}
+.contactOverlay { position: relative; z-index: 2; }
+.contactTitle { text-align: center; font-size: 3rem; margin-bottom: 80px; color: #007bff; }
+.contactGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; text-align: center; }
+.contactCol {
+  background: rgba(255,255,255,0.95); padding: 40px 30px; border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  .icon { font-size: 3rem; margin-bottom: 20px; }
+  h3 { font-size: 1.5rem; margin: 20px 0; color: #007bff; }
+  .phone { font-size: 1.8rem; font-weight: bold; margin: 20px 0; color: #007bff; }
+  .btn {
+    display: inline-block; background: #007bff; color: white; padding: 12px 30px;
+    border-radius: 50px; text-decoration: none; margin-top: 20px; font-weight: bold;
+    &:hover { background: #0056b3; }
+  }
+  .storeButtons img { height: 50px; margin: 10px; }
+}
+.hotline {
+  text-align: center; margin-top: 60px; font-size: 1.3rem; font-weight: bold;
+  strong { color: #007bff; }
+}
+
+/* Responsive đẹp */
+@media (max-width: 1200px) {
+  .valuesGrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .valuesGrid { grid-template-columns: 1fr; }
+  .sectionTitle { font-size: 2.4rem; }
+  .missionImg img {
+    border-width: 12px;
+    border-radius: 50px;
+  }
+}

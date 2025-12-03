@@ -21,7 +21,7 @@ const Header = () => {
     { content: "Giới thiệu dịch vụ", to: "#" },
 
     { content: "Đội ngũ bác sĩ", to: "#" },
-    { content: "Về chúng tôi", to: "#" },
+    { content: "Về chúng tôi", to: "/vechungtoi" },
     { content: "0983310337", to: "#" },
   ];
 
