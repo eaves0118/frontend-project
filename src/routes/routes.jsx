@@ -7,8 +7,10 @@ import Doctors from "@pages/Admin/Doctors/Doctors";
 import Schedule from "@pages/Admin/Schedule/Schedule";
 import Reports from "@pages/Admin/Reports/Reports";
 import Settings from "@pages/Admin/Settings/Settings";
-import Login from "@components/Login/Login";
-import Register from "@components/Register/Register";
+import DoctorPage from "@pages/Client/DoctorPage/DoctorPage";
+import AboutUsPage from "@pages/Client/AboutUsPage/AboutUsPage";
+import Login from "../pages/Auth/Login/Login";
+import Register from "../pages/Auth/Register/Register";
 import ProtectRoutes from "./ProtectRoutes";
 const routes = [
   {
@@ -16,6 +18,8 @@ const routes = [
     element: <ClientLayout />,
     children: [
       { path: "", element: <HomePage /> },
+      { path: "doi-ngu-bac-si", element: <DoctorPage /> },
+      { path: "ve-chung-toi", element: <AboutUsPage /> },
       { path: "dang-nhap", element: <Login /> },
       { path: "dang-ky", element: <Register /> },
     ],

@@ -1,9 +1,7 @@
-import React from "react";
-import Header from "@components/Header/Header";
-import Footer from "@components/Footer/Footer";
+import Header from "./header/header";
+import Footer from "./footer/footer";
 import styles from "./style.module.scss";
 import { Outlet } from "react-router-dom";
-import { Container } from "react-bootstrap";
 
 const ClientLayout = () => {
   return (
