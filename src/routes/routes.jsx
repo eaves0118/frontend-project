@@ -1,7 +1,9 @@
 import ClientLayout from "@components/Layouts/ClientLayout/ClientLayout";
 import AdminLayout from "@components/Layouts/AdminLayout/AdminLayout";
 import HomePage from "@pages/Client/HomePage/HomePage";
-import AboutUsPage from "@pages/Client/HomePage/AboutUsPage";   
+import AboutUsPage from "@pages/Client/HomePage/AboutUsPage"; 
+import Profile from "@pages/Client/Profile/Profile";  
+import DoctorProfile from "@pages/Client/Profile/DoctorProfile";
 import Dashboard from "@pages/Admin/Dashboard/Dashboard";
 import Patients from "@pages/Admin/Patients/Patients";
 import Doctors from "@pages/Admin/Doctors/Doctors";
@@ -23,6 +25,8 @@ const routes = [
       { path: "vechungtoi", element: <AboutUsPage /> },  
       { path: "dang-nhap", element: <Login /> },
       { path: "dang-ky", element: <Register /> },
+      { path: "hoso", element: <Profile /> },
+      { path: "hosobacsi", element: <DoctorProfile /> }
     ],
   },
   {
