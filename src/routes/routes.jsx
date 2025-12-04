@@ -2,10 +2,11 @@ import ClientLayout from "@components/Layouts/ClientLayout/ClientLayout";
 import AdminLayout from "@components/Layouts/AdminLayout/AdminLayout";
 import HomePage from "@pages/Client/HomePage/HomePage";
 import AboutUsPage from "@pages/Client/HomePage/AboutUsPage"; 
-import Profile from "@pages/Client/Profile/Profile";  
+import PatientProfile from "@pages/Client/Profile/PatientProfile";  
 import DoctorProfile from "@pages/Client/Profile/DoctorProfile";
 import Dashboard from "@pages/Admin/Dashboard/Dashboard";
 import Patients from "@pages/Admin/Patients/Patients";
+import AdminProfile from "@pages/Admin/Profile/AdminProfile";
 import Doctors from "@pages/Admin/Doctors/Doctors";
 import Schedule from "@pages/Admin/Schedule/Schedule";
 import Reports from "@pages/Admin/Reports/Reports";
@@ -25,7 +26,7 @@ const routes = [
       { path: "vechungtoi", element: <AboutUsPage /> },  
       { path: "dang-nhap", element: <Login /> },
       { path: "dang-ky", element: <Register /> },
-      { path: "hoso", element: <Profile /> },
+      { path: "hoso", element: <PatientProfile /> },
       { path: "hosobacsi", element: <DoctorProfile /> }
     ],
   },
@@ -37,6 +38,7 @@ const routes = [
       </ProtectRoutes>
     ),
     children: [
+      { path: "hoso", element: <AdminProfile /> },
       { path: "bang-dieu-khien", element: <Dashboard /> },
       { path: "benh-nhan", element: <Patients /> },
       { path: "bac-si", element: <Doctors /> },
