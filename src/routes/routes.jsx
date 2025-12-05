@@ -12,6 +12,9 @@ import AboutUsPage from "@pages/Client/AboutUsPage/AboutUsPage";
 import Login from "../pages/Auth/Login/Login";
 import Register from "../pages/Auth/Register/Register";
 import ProtectRoutes from "./ProtectRoutes";
+import PatientRecordView from "@pages/Client/MedicalTools/PatientRecordView";
+import PrescriptionTool from "@pages/Client/MedicalTools/PrescriptionTool";
+
 const routes = [
   {
     path: "/",
@@ -22,8 +25,30 @@ const routes = [
       { path: "ve-chung-toi", element: <AboutUsPage /> },
       { path: "dang-nhap", element: <Login /> },
       { path: "dang-ky", element: <Register /> },
+
+      // Hồ sơ y tế (cho bác sĩ & bệnh nhân)
+      {
+        path: "ho-so-y-te/:patientId",
+        element: (
+          <ProtectRoutes allowedRoles={["doctor", "patient"]}>
+            <PatientRecordView />
+          </ProtectRoutes>
+        ),
+      },
+
+      // Công cụ tạo đơn thuốc (chỉ bác sĩ)
+      {
+        path: "tao-don-thuoc/:appointmentId",
+        element: (
+          <ProtectRoutes allowedRoles={["doctor"]}>
+            <PrescriptionTool />
+          </ProtectRoutes>
+        ),
+      },
     ],
   },
+
+  // ================= ADMIN ROUTES =================
   {
     path: "/admin",
     element: (
@@ -31,7 +56,6 @@ const routes = [
         <AdminLayout />
       </ProtectRoutes>
     ),
-
     children: [
       { path: "bang-dieu-khien", element: <Dashboard /> },
       { path: "benh-nhan", element: <Patients /> },
