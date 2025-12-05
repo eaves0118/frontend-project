@@ -25,6 +25,12 @@ export const doctorApi = {
     const res = await axiosClient.get("/doctors");
     return res.data;
   },
+  async delete(id) {
+    return await axiosClient.delete(`/admin/users/${id}`);
+  },
+  async update(id, data) {              
+    return await axiosClient.put(`/admin/doctors/${id}`, data);
+  },
 };
 
 export const adminApi = {
@@ -40,4 +46,8 @@ export const patientApi = {
     console.log("res", res);
     return res;
   },
+  async delete(id) {
+    return await axiosClient.delete(`/admin/users/${id}`);
+  },
 };
+
