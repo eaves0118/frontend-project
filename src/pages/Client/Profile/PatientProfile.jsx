@@ -1,30 +1,6 @@
-// src/pages/Client/Profile/PatientProfile.jsx
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Badge,
-  ListGroup,
-  Alert,
-  Table,
-  Image,
-  Form,
-  Button,
-} from "react-bootstrap";
-import {
-  FiUser,
-  FiPhone,
-  FiMail,
-  FiCalendar,
-  FiAlertTriangle,
-  FiHeart,
-  FiEdit3,
-  FiCheck,
-  FiX,
-  FiCamera,
-} from "react-icons/fi";
+import { Container, Row, Col, Card, Badge, ListGroup, Alert, Table, Image, Form, Button} from "react-bootstrap";
+import { FiUser, FiPhone, FiMail, FiCalendar, FiAlertTriangle, FiHeart, FiEdit3, FiCheck, FiX, FiCamera} from "react-icons/fi";
 import authApi from "@/services/api";
 
 const PatientProfile = () => {
