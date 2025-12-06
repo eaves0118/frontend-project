@@ -27,58 +27,33 @@ const DAYS_OF_WEEK = [
   { value: "Sunday", label: "Chủ nhật" },
 ];
 
-const EditDoctorDialog = ({ open, onClose, doctorData, onSuccess }) => {
-  console.log(doctorData);
+const CreateDoctorDialog = ({ open, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [specializations, setSpecializations] = useState([]);
 
   const [formData, setFormData] = useState({
-    fullName: "", 
-    licenseNumber: "", 
-    specCode: "",
-    isActive: true,
+    username: "", email: "", password: "", fullName: "",
+    licenseNumber: "", specCode: "",
     qualifications: [], 
-    workHistory: [], 
-    schedules: []
+    workHistory: [],   
+    schedules: []      
   });
 
   useEffect(() => {
-    if (open && doctorData) {
-      const fetchData = async () => {
+    if (open) {
+      const fetchSpecs = async () => {
         try {
-          const [specsRes, doctorRes] = await Promise.all([
-            specApi.getAll(),
-            doctorApi.getById(doctorData)
-          ]);
-
-          const specs = specsRes.data || specsRes;
+          const res = await specApi.getAll();
+          const specs = res.data || res;
           setSpecializations(specs);
-          const doc = doctorRes.data || doctorRes;
-          
-          setFormData({
-            fullName: doc.fullName || "",
-            licenseNumber: doc.licenseNumber || "",
-            specCode: doc.specialization?.code || doc.specCode || "", 
-            isActive: doc.isActive,
-
-            qualifications: doc.qualifications || [],
-            schedules: doc.schedules || [],
-            workHistory: (doc.workHistory || []).map(w => ({
-                ...w,
-                from: w.from ? w.from.split('T')[0] : '',
-                to: w.to ? w.to.split('T')[0] : ''
-            }))
-          });
-
+          if (specs.length > 0) setFormData(prev => ({ ...prev, specCode: specs[0].code }));
         } catch (error) {
-          console.error("Error loading data:", error);
-          alert("Không tải được thông tin bác sĩ. Vui lòng thử lại.");
-          onClose();
+          console.error("Failed to fetch specs", error);
         }
       };
-      fetchData();
+      fetchSpecs();
     }
-  }, [open, doctorData]);
+  }, [open]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -136,27 +111,27 @@ const EditDoctorDialog = ({ open, onClose, doctorData, onSuccess }) => {
     setFormData(prev => ({ ...prev, schedules: newList }));
   };
 
-
   const handleSubmit = async () => {
+    if (!formData.username || !formData.email) {
+      alert("Thiếu thông tin cơ bản!");
+      return;
+    }
     setLoading(true);
     try {
       const payload = {
         ...formData,
-
         workHistory: formData.workHistory.map(w => ({
             ...w,
             to: w.to ? w.to : null
         }))
       };
-
-      await doctorApi.update(doctorData, payload);
-      
-      alert("Cập nhật thành công!");
+      await doctorApi.create(payload);
+      alert("Thêm bác sĩ thành công!");
       onSuccess();
-      onClose(); 
+      onClose();
     } catch (error) {
       console.error(error);
-      alert("Lỗi: " + (error.response?.data?.message || "Unknown Error"));
+      alert("Lỗi: " + (error.response?.data?.message || "Unknown error"));
     } finally {
       setLoading(false);
     }
@@ -164,29 +139,31 @@ const EditDoctorDialog = ({ open, onClose, doctorData, onSuccess }) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle>Chỉnh sửa thông tin Bác sĩ</DialogTitle>
+      <DialogTitle>Thêm Hồ Sơ Bác Sĩ</DialogTitle>
       <DialogContent dividers>
         <Box component="form" sx={{ mt: 1 }}>
-            
-          {/* === 1. THÔNG TIN CƠ BẢN === */}
-          <Typography variant="h6" color="primary" gutterBottom>1. Thông tin chung</Typography>
+          
+          <Typography variant="h6" color="primary" gutterBottom>1. Thông tin Tài khoản & Chuyên môn</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField fullWidth label="Họ tên" name="fullName" value={formData.fullName} onChange={handleChange} />
+            <Grid item xs={3}>
+              <TextField fullWidth label="Username *" name="username" value={formData.username} onChange={handleChange} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={3}>
+              <TextField fullWidth label="Email *" name="email" value={formData.email} onChange={handleChange} />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField fullWidth label="Mật khẩu *" name="password" type="password" value={formData.password} onChange={handleChange} />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField fullWidth label="Họ tên *" name="fullName" value={formData.fullName} onChange={handleChange} />
+            </Grid>
+            <Grid item xs={4}>
                <TextField select fullWidth label="Chuyên khoa" name="specCode" value={formData.specCode} onChange={handleChange}>
                   {specializations.map(s => <MenuItem key={s.code} value={s.code}>{s.name}</MenuItem>)}
                </TextField>
             </Grid>
             <Grid item xs={4}>
               <TextField fullWidth label="Số chứng chỉ" name="licenseNumber" value={formData.licenseNumber} onChange={handleChange} />
-            </Grid>
-            <Grid item xs={4}>
-                <TextField select fullWidth label="Trạng thái" name="isActive" value={formData.isActive} onChange={(e) => setFormData({...formData, isActive: e.target.value})}>
-                    <MenuItem value={true}>Hoạt động</MenuItem>
-                    <MenuItem value={false}>Dừng hoạt động</MenuItem>
-                </TextField>
             </Grid>
           </Grid>
 
@@ -201,11 +178,11 @@ const EditDoctorDialog = ({ open, onClose, doctorData, onSuccess }) => {
             <Paper key={index} variant="outlined" sx={{ p: 2, mb: 2, bgcolor: '#f9fafb' }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs={5}>
-                  <TextField fullWidth label="Tên bằng cấp" size="small" 
+                  <TextField fullWidth label="Tên bằng cấp (VD: Tiến sĩ Y học)" size="small" 
                     value={item.degree} onChange={(e) => changeQualification(index, 'degree', e.target.value)} />
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField fullWidth label="Nơi cấp" size="small" 
+                  <TextField fullWidth label="Nơi cấp (Trường/Viện)" size="small" 
                     value={item.institution} onChange={(e) => changeQualification(index, 'institution', e.target.value)} />
                 </Grid>
                 <Grid item xs={2}>
@@ -230,20 +207,20 @@ const EditDoctorDialog = ({ open, onClose, doctorData, onSuccess }) => {
             <Paper key={index} variant="outlined" sx={{ p: 2, mb: 2, bgcolor: '#f9fafb' }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs={3}>
-                  <TextField fullWidth label="Chức vụ" size="small" 
+                  <TextField fullWidth label="Chức vụ (VD: Trưởng khoa)" size="small" 
                     value={item.position} onChange={(e) => changeWorkHistory(index, 'position', e.target.value)} />
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField fullWidth label="Nơi làm việc" size="small" 
+                  <TextField fullWidth label="Nơi làm việc (Bệnh viện)" size="small" 
                     value={item.place} onChange={(e) => changeWorkHistory(index, 'place', e.target.value)} />
                 </Grid>
                 <Grid item xs={2}>
                   <TextField fullWidth label="Từ ngày" type="date" size="small" InputLabelProps={{ shrink: true }}
-                    value={item.from} onChange={(e) => changeWorkHistory(index, 'from', e.target.value)} />
+                    value={item.from ? item.from.split('T')[0] : ''} onChange={(e) => changeWorkHistory(index, 'from', e.target.value)} />
                 </Grid>
                 <Grid item xs={2}>
-                  <TextField fullWidth label="Đến ngày" type="date" size="small" InputLabelProps={{ shrink: true }}
-                    value={item.to} onChange={(e) => changeWorkHistory(index, 'to', e.target.value)} />
+                  <TextField fullWidth label="Đến ngày (Để trống nếu là hiện tại)" type="date" size="small" InputLabelProps={{ shrink: true }}
+                    value={item.to ? item.to.split('T')[0] : ''} onChange={(e) => changeWorkHistory(index, 'to', e.target.value)} />
                 </Grid>
                 <Grid item xs={1}>
                   <IconButton color="error" onClick={() => removeWorkHistory(index)}><DeleteOutline /></IconButton>
@@ -255,7 +232,7 @@ const EditDoctorDialog = ({ open, onClose, doctorData, onSuccess }) => {
           <Divider sx={{ my: 3 }} />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-            <Typography variant="h6" color="primary">4. Lịch làm việc</Typography>
+            <Typography variant="h6" color="primary">4. Lịch làm việc định kỳ</Typography>
             <Button startIcon={<AddCircleOutline />} onClick={addSchedule} variant="outlined" size="small">Thêm lịch</Button>
           </Box>
 
@@ -263,18 +240,22 @@ const EditDoctorDialog = ({ open, onClose, doctorData, onSuccess }) => {
             <Paper key={index} variant="outlined" sx={{ p: 2, mb: 2, bgcolor: '#f9fafb' }}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs={3}>
-                  <TextField select fullWidth label="Thứ" size="small" value={item.day} onChange={(e) => changeSchedule(index, 'day', e.target.value)}>
+                  <TextField select fullWidth label="Thứ" size="small"
+                    value={item.day} onChange={(e) => changeSchedule(index, 'day', e.target.value)}>
                     {DAYS_OF_WEEK.map(day => <MenuItem key={day.value} value={day.value}>{day.label}</MenuItem>)}
                   </TextField>
                 </Grid>
                 <Grid item xs={3}>
-                  <TextField fullWidth label="Bắt đầu" type="time" size="small" InputLabelProps={{ shrink: true }} value={item.start} onChange={(e) => changeSchedule(index, 'start', e.target.value)} />
+                  <TextField fullWidth label="Bắt đầu" type="time" size="small" InputLabelProps={{ shrink: true }}
+                    value={item.start} onChange={(e) => changeSchedule(index, 'start', e.target.value)} />
                 </Grid>
                 <Grid item xs={3}>
-                  <TextField fullWidth label="Kết thúc" type="time" size="small" InputLabelProps={{ shrink: true }} value={item.end} onChange={(e) => changeSchedule(index, 'end', e.target.value)} />
+                  <TextField fullWidth label="Kết thúc" type="time" size="small" InputLabelProps={{ shrink: true }}
+                    value={item.end} onChange={(e) => changeSchedule(index, 'end', e.target.value)} />
                 </Grid>
                 <Grid item xs={2}>
-                  <TextField fullWidth label="Max BN" type="number" size="small" value={item.maxPatients} onChange={(e) => changeSchedule(index, 'maxPatients', e.target.value)} />
+                  <TextField fullWidth label="Max BN" type="number" size="small"
+                    value={item.maxPatients} onChange={(e) => changeSchedule(index, 'maxPatients', e.target.value)} />
                 </Grid>
                 <Grid item xs={1}>
                   <IconButton color="error" onClick={() => removeSchedule(index)}><DeleteOutline /></IconButton>
@@ -286,13 +267,13 @@ const EditDoctorDialog = ({ open, onClose, doctorData, onSuccess }) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="inherit">Đóng</Button>
+        <Button onClick={onClose} color="inherit">Hủy bỏ</Button>
         <Button onClick={handleSubmit} variant="contained" disabled={loading}>
-          {loading ? "Lưu thay đổi" : "Cập nhật"}
+          {loading ? "Đang lưu..." : "Tạo Bác sĩ"}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default EditDoctorDialog;
+export default CreateDoctorDialog;
