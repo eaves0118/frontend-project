@@ -12,7 +12,7 @@ import { doctorApi } from "@services/api";
 import Modal from "../../../components/ui/modal"; // import modal của bạn
 
 const Doctors = () => {
-  const { doctors, loadingDoctors, refreshDoctors } = useContext(UserContext);
+  const { doctors, loading, refreshDoctors } = useContext(UserContext);
 
   const [openEdit, setOpenEdit] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
@@ -77,7 +77,7 @@ const Doctors = () => {
           <TableBase
             rows={rows}
             columns={columns}
-            loading={loadingDoctors}
+            loading={loading}
             getRowId={(r) => r.id}
             pageSizeOptions={[10, 20, 50]}
             rowHeight={70}

@@ -1,69 +1,60 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Box,
-  Container,
+  Typography,
   Paper,
   TextField,
   InputAdornment,
-  Typography,
   Tooltip,
-  Button,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import Button from "../../../components/ui/button";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { patientApi } from "../../../services/api";
+import { UserContext } from "@/providers/UserProvider";
+import { TableBase } from "../../../components/ui/table";
+import { GridToolbarContainer } from "@mui/x-data-grid";
 
 const Patients = () => {
-  const [patients, setPatients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { patients, loadingPatients, refreshPatients, deletePatient } =
+    useContext(UserContext);
+
   const [searchText, setSearchText] = useState("");
+  const [rows, setRows] = useState([]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "Chưa có";
     const date = new Date(dateStr);
     return isNaN(date.getTime())
-      ? "Khong hop le"
+      ? "Không hợp lệ"
       : date.toLocaleDateString("vi-VN");
   };
 
+  // Map patients từ context
   useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        setLoading(true);
-        const res = await patientApi.getAll();
-        const mapped = res.data.map((p) => ({
-          id: p.id,
-          fullName: p.fullName || "",
-          email: p.email || "",
-          gender:
-            p.gender === "Male" ? "Nam" : p.gender === "Female" ? "Nu" : "Khác",
-          dateOfBirth: formatDate(p.dateOfBirth),
-          originalDate: p.dateOfBirth,
-        }));
-        setPatients(mapped);
-      } catch (error) {
-        alert("Khong the tai danh sach benh nhan");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPatients();
-  }, []);
+    const mapped = patients.map((p) => ({
+      id: p.id,
+      fullName: p.fullName || "",
+      email: p.email || "",
+      gender:
+        p.gender === "Male" ? "Nam" : p.gender === "Female" ? "Nữ" : "Khác",
+      dateOfBirth: formatDate(p.dateOfBirth),
+      originalDate: p.dateOfBirth,
+    }));
+    setRows(mapped);
+  }, [patients]);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure!")) return;
+    if (!window.confirm("Bạn có chắc chắn muốn xóa bệnh nhân này?")) return;
 
     try {
-      await patientApi.delete(id);
-      setPatients((prev) => prev.filter((p) => p.id !== id));
+      await deletePatient(id);
+      alert("Xóa thành công!");
     } catch (error) {
-      alert("Failed!");
+      alert("Xóa thất bại!");
     }
   };
 
-  const filteredRows = patients.filter(
+  const filteredRows = rows.filter(
     (row) =>
       row.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
       row.email.toLowerCase().includes(searchText.toLowerCase())
@@ -90,16 +81,9 @@ const Patients = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <Tooltip title="Xoa benh nhan">
-          <Button
-            size="small"
-            variant="contained"
-            color="error"
-            onClick={() => handleDelete(params.row.id)}
-            sx={{ minWidth: 40 }}
-          >
-            <DeleteIcon fontSize="small" />
-          </Button>
+        <Tooltip title="Xóa bệnh nhân">
+          <Button content={"Xóa"} onClick={() => handleDelete(params.row.id)} />
+          <DeleteIcon fontSize="small" />
         </Tooltip>
       ),
     },
@@ -122,26 +106,34 @@ const Patients = () => {
         }}
         sx={{ width: 320 }}
       />
+      <Button variant="contained" sx={{ ml: 2 }} onClick={refreshPatients}>
+        Làm mới
+      </Button>
     </GridToolbarContainer>
   );
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Paper elevation={8} sx={{ borderRadius: 3, overflow: "hidden" }}>
-        <Box sx={{ bgcolor: "primary.main", color: "white", p: 3 }}>
-          <Typography variant="h5" fontWeight="bold">
-            Danh sách bệnh nhân
-          </Typography>
-        </Box>
-
+    <>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 4 }}>
+        <Typography variant="h4">Danh sách Bệnh nhân</Typography>
+        <div style={{ width: "250px" }}>
+          <Button
+            content="+ Bệnh nhân"
+            variant="contained"
+            onClick={() => setOpenCreate(true)}
+          />
+        </div>
+      </Box>
+      <Paper sx={{ overflow: "hidden" }}>
         <Box sx={{ height: 700, width: "100%" }}>
-          <DataGrid
+          <TableBase
             rows={filteredRows}
             columns={columns}
-            pageSizeOptions={[10, 25, 50]}
-            checkboxSelection
-            loading={loading}
+            loading={loadingPatients}
+            rowHeight={60}
+            getRowId={(row) => row.id}
             components={{ Toolbar: CustomToolbar }}
+            pageSizeOptions={[10, 25, 50]}
             sx={{
               "& .MuiDataGrid-columnHeaders": {
                 bgcolor: "#f5f5f5",
@@ -151,7 +143,7 @@ const Patients = () => {
           />
         </Box>
       </Paper>
-    </Container>
+    </>
   );
 };
 
