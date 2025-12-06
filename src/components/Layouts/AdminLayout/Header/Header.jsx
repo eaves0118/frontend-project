@@ -25,6 +25,10 @@ const Header = () => {
     logout();
     navigate("/dang-nhap");
   };
+  const handleProfileClick = () => {
+    setIsOpen(false);
+    navigate("/admin/profile");
+  };
 
   return (
     <header className={styles.headerWrapper}>
@@ -57,7 +61,7 @@ const Header = () => {
       </div>
       {isOpen && (
         <div className={styles.options__admin}>
-          <div className={styles.options__item}>
+          <div className={styles.options__item} onClick={handleProfileClick}>
             <AccountCircleIcon />
             <span>Profile</span>
           </div>
