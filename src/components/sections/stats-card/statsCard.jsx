@@ -17,4 +17,21 @@ const StatsCard = ({ title, value, percent, icon, status }) => {
   );
 };
 
-export default StatsCard;
+const StatsCardCustom = ({ title, stats }) => {
+  return (
+    <div className={styles.wrapper}>
+      <h3 className={styles.title}>{title}</h3>
+
+      <div className={styles.grid}>
+        {stats.map((item, index) => (
+          <div key={index} className={`${styles.card} ${styles[item.type]}`}>
+            <p className={styles.label}>{item.label}</p>
+            <h2 className={styles.value}>{item.value}</h2>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export { StatsCard, StatsCardCustom };

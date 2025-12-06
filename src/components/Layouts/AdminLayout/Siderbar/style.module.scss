@@ -1,12 +1,11 @@
 @import "@styles/_variables.module.scss";
 
 .sidebar {
-    width: 250px;
-    background-color: $color-white;
-    border-right: 1px solid #c9c1c1;
+    width: 100px;
     color: $color-dark;
     min-height: 100vh;
     padding: 20px;
+    background-color: #f5f6fa;
 }
 
 .sidebarHeader {
@@ -21,13 +20,14 @@
 
 .logoIcon {
     font-size: 22px;
+    font-weight: bold;
+    text-align: center;
 }
-
 .navMenu {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    a{
+    a {
         display: flex;
         align-items: center;
     }
@@ -36,9 +36,10 @@
 .navItem {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     padding: 12px;
-    border-radius: 6px;
+    border-radius: 50%;
     font-weight: $font-weight-semibold;
     cursor: pointer;
     transition: 0.2s;
@@ -55,4 +56,3 @@
     font-size: 24px;
     transform: translateY(-3px);
 }
-

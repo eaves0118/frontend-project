@@ -9,9 +9,7 @@ import {
   Tooltip,
   Button,
 } from "@mui/material";
-import {
-  DataGrid,
-} from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { patientApi } from "../../../services/api";
@@ -24,7 +22,9 @@ const Patients = () => {
   const formatDate = (dateStr) => {
     if (!dateStr) return "Chưa có";
     const date = new Date(dateStr);
-    return isNaN(date.getTime()) ? "Khong hop le" : date.toLocaleDateString("vi-VN");
+    return isNaN(date.getTime())
+      ? "Khong hop le"
+      : date.toLocaleDateString("vi-VN");
   };
 
   useEffect(() => {
@@ -36,7 +36,8 @@ const Patients = () => {
           id: p.id,
           fullName: p.fullName || "",
           email: p.email || "",
-          gender: p.gender === "Male" ? "Nam" : p.gender === "Female" ? "Nu" : "Khác",
+          gender:
+            p.gender === "Male" ? "Nam" : p.gender === "Female" ? "Nu" : "Khác",
           dateOfBirth: formatDate(p.dateOfBirth),
           originalDate: p.dateOfBirth,
         }));
@@ -72,7 +73,13 @@ const Patients = () => {
     { field: "id", headerName: "ID", width: 90 },
     { field: "fullName", headerName: "Họ và tên", flex: 1, minWidth: 220 },
     { field: "email", headerName: "Email", flex: 1, minWidth: 240 },
-    { field: "gender", headerName: "Giới tính", width: 110, align: "center", headerAlign: "center" },
+    {
+      field: "gender",
+      headerName: "Giới tính",
+      width: 110,
+      align: "center",
+      headerAlign: "center",
+    },
     { field: "dateOfBirth", headerName: "Ngày sinh", width: 130 },
     {
       field: "actions",

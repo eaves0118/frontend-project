@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -14,10 +14,16 @@ import {
   IconButton,
   Paper,
   Avatar,
-  Stack
+  Stack,
 } from "@mui/material";
-import { AddCircleOutline, DeleteOutline, CloudUpload, AccountCircle } from "@mui/icons-material"; // Thêm Icon
-import { doctorApi, specApi, uploadApi } from "@services/api";
+import {
+  AddCircleOutline,
+  DeleteOutline,
+  CloudUpload,
+  AccountCircle,
+} from "@mui/icons-material";
+import { uploadApi, specApi } from "@services/api";
+import { UserContext } from "../../../providers/UserProvider";
 
 const DAYS_OF_WEEK = [
   { value: "Monday", label: "Thứ 2" },
@@ -29,143 +35,86 @@ const DAYS_OF_WEEK = [
   { value: "Sunday", label: "Chủ nhật" },
 ];
 
-const CreateDoctorDialog = ({ open, onClose, onSuccess }) => {
+const AddDoctorDialog = ({ open, onClose, onSuccess }) => {
+  const { addDoctor } = useContext(UserContext);
+  const fileInputRef = useRef(null);
+
   const [loading, setLoading] = useState(false);
   const [specializations, setSpecializations] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
-    username: "", email: "", password: "", fullName: "",
-    licenseNumber: "", specCode: "",
+    username: "",
+    email: "",
+    password: "",
+    fullName: "",
+    licenseNumber: "",
+    specCode: "",
     qualifications: [],
     workHistory: [],
     schedules: [],
-    avatarUrl: ""
+    avatarUrl: "",
   });
 
   useEffect(() => {
-    if (open) {
-      const fetchSpecs = async () => {
-        try {
-          const res = await specApi.getAll();
-          const specs = res.data || res;
-          setSpecializations(specs);
-          if (specs.length > 0) setFormData(prev => ({ ...prev, specCode: specs[0].code }));
-        } catch (error) {
-          console.error("Failed to fetch specs", error);
-        }
-      };
-      fetchSpecs();
-    }
-    setSelectedFile(null);
-    setPreviewUrl("");
+    if (!open) return;
+    specApi
+      .getAll()
+      .then((res) => {
+        const specs = res.data || res;
+        setSpecializations(specs);
+        if (specs.length)
+          setFormData((prev) => ({ ...prev, specCode: specs[0].code }));
+      })
+      .catch(console.error);
   }, [open]);
 
-  const handleFileSelect = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (!file.type.startsWith("image/")) {
-        alert("Vui lòng chọn file ảnh!");
-        return;
-      }
+  const handleChange = (e) =>
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
       setSelectedFile(file);
-      const objectUrl = URL.createObjectURL(file);
-      setPreviewUrl(objectUrl);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
-  useEffect(() => {
-    return () => {
-      if (previewUrl && previewUrl.startsWith("blob:")) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
-  }, [previewUrl]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const addQualification = () => {
-    setFormData(prev => ({
+  const addItem = (field, defaultItem) =>
+    setFormData((prev) => ({
       ...prev,
-      qualifications: [...prev.qualifications, { degree: "", institution: "", year: new Date().getFullYear() }]
+      [field]: [...prev[field], defaultItem],
     }));
-  };
-  const removeQualification = (index) => {
-    const newList = [...formData.qualifications];
-    newList.splice(index, 1);
-    setFormData(prev => ({ ...prev, qualifications: newList }));
-  };
-  const changeQualification = (index, field, value) => {
-    const newList = [...formData.qualifications];
-    newList[index][field] = value;
-    setFormData(prev => ({ ...prev, qualifications: newList }));
-  };
-
-  const addWorkHistory = () => {
-    setFormData(prev => ({
-      ...prev,
-      workHistory: [...prev.workHistory, { position: "", place: "", from: "", to: "" }]
-    }));
-  };
-  const removeWorkHistory = (index) => {
-    const newList = [...formData.workHistory];
-    newList.splice(index, 1);
-    setFormData(prev => ({ ...prev, workHistory: newList }));
-  };
-  const changeWorkHistory = (index, field, value) => {
-    const newList = [...formData.workHistory];
-    newList[index][field] = value;
-    setFormData(prev => ({ ...prev, workHistory: newList }));
-  };
-
-  const addSchedule = () => {
-    setFormData(prev => ({
-      ...prev,
-      schedules: [...prev.schedules, { day: "Monday", start: "08:00", end: "12:00", maxPatients: 10 }]
-    }));
-  };
-  const removeSchedule = (index) => {
-    const newList = [...formData.schedules];
-    newList.splice(index, 1);
-    setFormData(prev => ({ ...prev, schedules: newList }));
-  };
-  const changeSchedule = (index, field, value) => {
-    const newList = [...formData.schedules];
-    newList[index][field] = value;
-    setFormData(prev => ({ ...prev, schedules: newList }));
-  };
+  const removeItem = (field, idx) =>
+    setFormData((prev) => {
+      const arr = [...prev[field]];
+      arr.splice(idx, 1);
+      return { ...prev, [field]: arr };
+    });
+  const changeItem = (field, idx, key, value) =>
+    setFormData((prev) => {
+      const arr = [...prev[field]];
+      arr[idx][key] = value;
+      return { ...prev, [field]: arr };
+    });
 
   const handleSubmit = async () => {
     if (!formData.username || !formData.email || !formData.password) {
-      alert("Thiếu thông tin tài khoản cơ bản!");
+      alert("Vui lòng nhập đủ thông tin bắt buộc!");
       return;
     }
     setLoading(true);
     try {
-      let uploadedAvatarUrl = "";
+      let avatarUrl = "";
       if (selectedFile) {
-        const uploadRes = await uploadApi.uploadImage(selectedFile);
-        uploadedAvatarUrl = uploadRes.data?.url || uploadRes.url;
+        const res = await uploadApi.uploadImage(selectedFile);
+        avatarUrl = res.data?.url || res.url;
       }
-      const payload = {
-        ...formData,
-        avatarUrl: uploadedAvatarUrl,
-        workHistory: formData.workHistory.map(w => ({
-          ...w,
-          to: w.to ? w.to : null
-        }))
-      };
-      await doctorApi.create(payload);
+      await addDoctor({ ...formData, avatarUrl });
       alert("Thêm bác sĩ thành công!");
       onSuccess();
       onClose();
-    } catch (error) {
-      console.error(error);
-      alert("Lỗi: " + (error.response?.data?.message || "Unknown error"));
+    } catch (err) {
+      alert("Lỗi: " + (err.response?.data?.message || "Unknown error"));
     } finally {
       setLoading(false);
     }
@@ -173,39 +122,33 @@ const CreateDoctorDialog = ({ open, onClose, onSuccess }) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle>Thêm Hồ Sơ Bác Sĩ</DialogTitle>
+      <DialogTitle>Thêm bác sĩ</DialogTitle>
       <DialogContent dividers>
-        <Box component="form" sx={{ mt: 1 }}>
-
-          <Typography variant="h6" color="primary" gutterBottom>1. Thông tin Tài khoản & Chuyên môn</Typography>
-
+        <Box sx={{ mt: 1 }}>
+          {/* Avatar */}
           <Stack direction="row" spacing={3} alignItems="center" sx={{ mb: 3 }}>
-            <Box sx={{ position: 'relative' }}>
-              <Avatar
-                src={previewUrl} 
-                sx={{ width: 100, height: 100, border: '3px solid #e0e0e0' }}
-              >
-                {!previewUrl && <AccountCircle sx={{ width: 80, height: 80, color: '#bdbdbd' }} />}
+            <Box sx={{ position: "relative" }}>
+              <Avatar src={previewUrl} sx={{ width: 100, height: 100 }}>
+                {!previewUrl && (
+                  <AccountCircle
+                    sx={{ width: 80, height: 80, color: "#bdbdbd" }}
+                  />
+                )}
               </Avatar>
-              <input 
-                type="file" 
-                accept="image/*" 
-                hidden 
-                ref={fileInputRef} 
-                onChange={handleFileSelect} 
+              <input
+                type="file"
+                hidden
+                ref={fileInputRef}
+                onChange={handleFileSelect}
               />
-
-              <IconButton 
-                color="primary" 
-                sx={{ 
-                  position: 'absolute', 
-                  bottom: 0, 
-                  right: 0, 
-                  bgcolor: 'white', 
-                  boxShadow: 2,
-                  '&:hover': { bgcolor: '#f5f5f5' }
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  bgcolor: "white",
                 }}
-                onClick={() => fileInputRef.current.click()} 
+                onClick={() => fileInputRef.current.click()}
               >
                 <CloudUpload />
               </IconButton>
@@ -213,143 +156,363 @@ const CreateDoctorDialog = ({ open, onClose, onSuccess }) => {
             <Box>
               <Typography variant="subtitle2">Ảnh đại diện</Typography>
               <Typography variant="caption" color="text.secondary">
-                Cho phép: .jpg, .png, .jpeg. Tối đa 5MB.
+                jpg/png/jpeg, max 5MB
               </Typography>
             </Box>
           </Stack>
 
-
-
+          {/* Thông tin cơ bản */}
+          <Typography variant="h6" gutterBottom>
+            1. Thông tin cơ bản
+          </Typography>
           <Grid container spacing={2}>
             <Grid item xs={3}>
-              <TextField fullWidth label="Username *" name="username" value={formData.username} onChange={handleChange} />
+              <TextField
+                fullWidth
+                label="Username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField fullWidth label="Email *" name="email" value={formData.email} onChange={handleChange} />
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField fullWidth label="Mật khẩu *" name="password" type="password" value={formData.password} onChange={handleChange} />
+              <TextField
+                fullWidth
+                label="Mật khẩu"
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
             </Grid>
             <Grid item xs={3}>
-              <TextField fullWidth label="Họ tên *" name="fullName" value={formData.fullName} onChange={handleChange} />
+              <TextField
+                fullWidth
+                label="Họ tên"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+              />
             </Grid>
             <Grid item xs={4}>
-              <TextField select fullWidth label="Chuyên khoa" name="specCode" value={formData.specCode} onChange={handleChange}>
-                {specializations.map(s => <MenuItem key={s.code} value={s.code}>{s.name}</MenuItem>)}
+              <TextField
+                select
+                fullWidth
+                label="Chuyên khoa"
+                name="specCode"
+                value={formData.specCode}
+                onChange={handleChange}
+              >
+                {specializations.map((s) => (
+                  <MenuItem key={s.code} value={s.code}>
+                    {s.name}
+                  </MenuItem>
+                ))}
               </TextField>
             </Grid>
             <Grid item xs={4}>
-              <TextField fullWidth label="Số chứng chỉ" name="licenseNumber" value={formData.licenseNumber} onChange={handleChange} />
+              <TextField
+                fullWidth
+                label="Số chứng chỉ"
+                name="licenseNumber"
+                value={formData.licenseNumber}
+                onChange={handleChange}
+              />
             </Grid>
           </Grid>
 
-          <Divider sx={{ my: 3 }} />
+          <Divider sx={{ my: 2 }} />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-            <Typography variant="h6" color="primary">2. Bằng cấp / Học vấn</Typography>
-            <Button startIcon={<AddCircleOutline />} onClick={addQualification} variant="outlined" size="small">Thêm bằng cấp</Button>
+          {/* Bằng cấp */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6">2. Bằng cấp</Typography>
+            <Button
+              startIcon={<AddCircleOutline />}
+              size="small"
+              onClick={() =>
+                addItem("qualifications", {
+                  degree: "",
+                  institution: "",
+                  year: new Date().getFullYear(),
+                })
+              }
+            >
+              Thêm
+            </Button>
           </Box>
-
-          {formData.qualifications.map((item, index) => (
-            <Paper key={index} variant="outlined" sx={{ p: 2, mb: 2, bgcolor: '#f9fafb' }}>
-              <Grid container spacing={2} alignItems="center">
+          {formData.qualifications.map((item, idx) => (
+            <Paper key={idx} sx={{ p: 1, my: 1 }}>
+              <Grid container spacing={1} alignItems="center">
                 <Grid item xs={5}>
-                  <TextField fullWidth label="Tên bằng cấp (VD: Tiến sĩ Y học)" size="small"
-                    value={item.degree} onChange={(e) => changeQualification(index, 'degree', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Bằng cấp"
+                    size="small"
+                    value={item.degree}
+                    onChange={(e) =>
+                      changeItem(
+                        "qualifications",
+                        idx,
+                        "degree",
+                        e.target.value
+                      )
+                    }
+                  />
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField fullWidth label="Nơi cấp (Trường/Viện)" size="small"
-                    value={item.institution} onChange={(e) => changeQualification(index, 'institution', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Nơi cấp"
+                    size="small"
+                    value={item.institution}
+                    onChange={(e) =>
+                      changeItem(
+                        "qualifications",
+                        idx,
+                        "institution",
+                        e.target.value
+                      )
+                    }
+                  />
                 </Grid>
                 <Grid item xs={2}>
-                  <TextField fullWidth label="Năm" type="number" size="small"
-                    value={item.year} onChange={(e) => changeQualification(index, 'year', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Năm"
+                    type="number"
+                    size="small"
+                    value={item.year}
+                    onChange={(e) =>
+                      changeItem("qualifications", idx, "year", e.target.value)
+                    }
+                  />
                 </Grid>
                 <Grid item xs={1}>
-                  <IconButton color="error" onClick={() => removeQualification(index)}><DeleteOutline /></IconButton>
+                  <IconButton
+                    color="error"
+                    onClick={() => removeItem("qualifications", idx)}
+                  >
+                    <DeleteOutline />
+                  </IconButton>
                 </Grid>
               </Grid>
             </Paper>
           ))}
 
-          <Divider sx={{ my: 3 }} />
+          <Divider sx={{ my: 2 }} />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-            <Typography variant="h6" color="primary">3. Quá trình Công tác</Typography>
-            <Button startIcon={<AddCircleOutline />} onClick={addWorkHistory} variant="outlined" size="small">Thêm công tác</Button>
+          {/* Công tác */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6">3. Quá trình công tác</Typography>
+            <Button
+              startIcon={<AddCircleOutline />}
+              size="small"
+              onClick={() =>
+                addItem("workHistory", {
+                  position: "",
+                  place: "",
+                  from: "",
+                  to: "",
+                })
+              }
+            >
+              Thêm
+            </Button>
           </Box>
-
-          {formData.workHistory.map((item, index) => (
-            <Paper key={index} variant="outlined" sx={{ p: 2, mb: 2, bgcolor: '#f9fafb' }}>
-              <Grid container spacing={2} alignItems="center">
+          {formData.workHistory.map((item, idx) => (
+            <Paper key={idx} sx={{ p: 1, my: 1 }}>
+              <Grid container spacing={1} alignItems="center">
                 <Grid item xs={3}>
-                  <TextField fullWidth label="Chức vụ (VD: Trưởng khoa)" size="small"
-                    value={item.position} onChange={(e) => changeWorkHistory(index, 'position', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Chức vụ"
+                    size="small"
+                    value={item.position}
+                    onChange={(e) =>
+                      changeItem("workHistory", idx, "position", e.target.value)
+                    }
+                  />
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField fullWidth label="Nơi làm việc (Bệnh viện)" size="small"
-                    value={item.place} onChange={(e) => changeWorkHistory(index, 'place', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Nơi làm việc"
+                    size="small"
+                    value={item.place}
+                    onChange={(e) =>
+                      changeItem("workHistory", idx, "place", e.target.value)
+                    }
+                  />
                 </Grid>
                 <Grid item xs={2}>
-                  <TextField fullWidth label="Từ ngày" type="date" size="small" InputLabelProps={{ shrink: true }}
-                    value={item.from ? item.from.split('T')[0] : ''} onChange={(e) => changeWorkHistory(index, 'from', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Từ"
+                    type="date"
+                    size="small"
+                    InputLabelProps={{ shrink: true }}
+                    value={item.from ? item.from.split("T")[0] : ""}
+                    onChange={(e) =>
+                      changeItem("workHistory", idx, "from", e.target.value)
+                    }
+                  />
                 </Grid>
                 <Grid item xs={2}>
-                  <TextField fullWidth label="Đến ngày (Để trống nếu là hiện tại)" type="date" size="small" InputLabelProps={{ shrink: true }}
-                    value={item.to ? item.to.split('T')[0] : ''} onChange={(e) => changeWorkHistory(index, 'to', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Đến"
+                    type="date"
+                    size="small"
+                    InputLabelProps={{ shrink: true }}
+                    value={item.to ? item.to.split("T")[0] : ""}
+                    onChange={(e) =>
+                      changeItem("workHistory", idx, "to", e.target.value)
+                    }
+                  />
                 </Grid>
                 <Grid item xs={1}>
-                  <IconButton color="error" onClick={() => removeWorkHistory(index)}><DeleteOutline /></IconButton>
+                  <IconButton
+                    color="error"
+                    onClick={() => removeItem("workHistory", idx)}
+                  >
+                    <DeleteOutline />
+                  </IconButton>
                 </Grid>
               </Grid>
             </Paper>
           ))}
 
-          <Divider sx={{ my: 3 }} />
+          <Divider sx={{ my: 2 }} />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-            <Typography variant="h6" color="primary">4. Lịch làm việc định kỳ</Typography>
-            <Button startIcon={<AddCircleOutline />} onClick={addSchedule} variant="outlined" size="small">Thêm lịch</Button>
+          {/* Lịch */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6">4. Lịch làm việc</Typography>
+            <Button
+              startIcon={<AddCircleOutline />}
+              size="small"
+              onClick={() =>
+                addItem("schedules", {
+                  day: "Monday",
+                  start: "08:00",
+                  end: "12:00",
+                  maxPatients: 10,
+                })
+              }
+            >
+              Thêm
+            </Button>
           </Box>
-
-          {formData.schedules.map((item, index) => (
-            <Paper key={index} variant="outlined" sx={{ p: 2, mb: 2, bgcolor: '#f9fafb' }}>
-              <Grid container spacing={2} alignItems="center">
+          {formData.schedules.map((item, idx) => (
+            <Paper key={idx} sx={{ p: 1, my: 1 }}>
+              <Grid container spacing={1} alignItems="center">
                 <Grid item xs={3}>
-                  <TextField select fullWidth label="Thứ" size="small"
-                    value={item.day} onChange={(e) => changeSchedule(index, 'day', e.target.value)}>
-                    {DAYS_OF_WEEK.map(day => <MenuItem key={day.value} value={day.value}>{day.label}</MenuItem>)}
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    value={item.day}
+                    onChange={(e) =>
+                      changeItem("schedules", idx, "day", e.target.value)
+                    }
+                  >
+                    {DAYS_OF_WEEK.map((d) => (
+                      <MenuItem key={d.value} value={d.value}>
+                        {d.label}
+                      </MenuItem>
+                    ))}
                   </TextField>
                 </Grid>
                 <Grid item xs={3}>
-                  <TextField fullWidth label="Bắt đầu" type="time" size="small" InputLabelProps={{ shrink: true }}
-                    value={item.start} onChange={(e) => changeSchedule(index, 'start', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Bắt đầu"
+                    type="time"
+                    size="small"
+                    InputLabelProps={{ shrink: true }}
+                    value={item.start}
+                    onChange={(e) =>
+                      changeItem("schedules", idx, "start", e.target.value)
+                    }
+                  />
                 </Grid>
                 <Grid item xs={3}>
-                  <TextField fullWidth label="Kết thúc" type="time" size="small" InputLabelProps={{ shrink: true }}
-                    value={item.end} onChange={(e) => changeSchedule(index, 'end', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Kết thúc"
+                    type="time"
+                    size="small"
+                    InputLabelProps={{ shrink: true }}
+                    value={item.end}
+                    onChange={(e) =>
+                      changeItem("schedules", idx, "end", e.target.value)
+                    }
+                  />
                 </Grid>
                 <Grid item xs={2}>
-                  <TextField fullWidth label="Max BN" type="number" size="small"
-                    value={item.maxPatients} onChange={(e) => changeSchedule(index, 'maxPatients', e.target.value)} />
+                  <TextField
+                    fullWidth
+                    label="Max BN"
+                    type="number"
+                    size="small"
+                    value={item.maxPatients}
+                    onChange={(e) =>
+                      changeItem(
+                        "schedules",
+                        idx,
+                        "maxPatients",
+                        e.target.value
+                      )
+                    }
+                  />
                 </Grid>
                 <Grid item xs={1}>
-                  <IconButton color="error" onClick={() => removeSchedule(index)}><DeleteOutline /></IconButton>
+                  <IconButton
+                    color="error"
+                    onClick={() => removeItem("schedules", idx)}
+                  >
+                    <DeleteOutline />
+                  </IconButton>
                 </Grid>
               </Grid>
             </Paper>
           ))}
-
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="inherit">Hủy bỏ</Button>
-        <Button onClick={handleSubmit} variant="contained" disabled={loading}>
-          {loading ? "Đang lưu..." : "Tạo Bác sĩ"}
+        <Button onClick={onClose}>Hủy</Button>
+        <Button variant="contained" onClick={handleSubmit} disabled={loading}>
+          {loading ? "Đang lưu..." : "Thêm bác sĩ"}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default CreateDoctorDialog;
+export default AddDoctorDialog;

@@ -1,18 +1,18 @@
 import React from "react";
 import styles from "./style.module.scss";
 import { Link } from "react-router-dom";
-import { AiFillDashboard } from "react-icons/ai";
-import { FaUser } from "react-icons/fa";
-import { FaUserDoctor } from "react-icons/fa6";
-import { IoMdSettings } from "react-icons/io";
-import { BsCalendarDateFill } from "react-icons/bs";
+import GridViewIcon from "@mui/icons-material/GridView";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 
-const Sidebar = () => {
+const Siderbar = () => {
   return (
     <section className={styles.sidebar} id="sidebar">
       <div className={styles.sidebarHeader}>
         <div className={styles.logo}>
-          <div className={styles.logoIcon}>Health online</div>
+          <div className={styles.logoIcon}>Health Care</div>
         </div>
       </div>
 
@@ -22,41 +22,35 @@ const Sidebar = () => {
           className={`${styles.navItem} ${styles.active}`}
         >
           <span className={styles.navIcon}>
-            <AiFillDashboard />
+            <GridViewIcon />
           </span>
-          <span>Dashboard</span>
         </Link>
 
         <Link to="benh-nhan" className={styles.navItem}>
           <span className={styles.navIcon}>
-            <FaUser />
+            <PersonOutlineOutlinedIcon />
           </span>
-          <span>Patients</span>
         </Link>
 
         <Link to="bac-si" className={styles.navItem}>
           <span className={styles.navIcon}>
-            <FaUserDoctor />
+            <PeopleAltOutlinedIcon />
           </span>
-          <span>Doctors</span>
         </Link>
 
         <Link to="lich-lam-viec" className={styles.navItem}>
           <span className={styles.navIcon}>
-            <BsCalendarDateFill />
+            <CalendarMonthOutlinedIcon />
           </span>
-          <span>Schedule</span>
         </Link>
-
         <Link to="cai-dat" className={styles.navItem}>
           <span className={styles.navIcon}>
-            <IoMdSettings />
+            <SettingsOutlinedIcon />
           </span>
-          <span>Settings</span>
         </Link>
       </nav>
     </section>
   );
 };
 
-export default Sidebar;
+export default Siderbar;

@@ -51,3 +51,64 @@
         font-weight: 700;
     }
 }
+
+
+.wrapper {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    width: 350px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card {
+    background: #f5f7fb;
+    padding: 14px 18px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.value {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* màu phân loại giống UI */
+.low {
+    background-color: #fff7d7;
+}
+
+.out {
+    background-color: #ffe4e4;
+}
+
+.normal {
+    background-color: #e7f3ff;
+}
+
+.valueBox {
+    background-color: #e4ffe9;
+}
+
+.avg {
+    background-color: #f6e8ff;
+}

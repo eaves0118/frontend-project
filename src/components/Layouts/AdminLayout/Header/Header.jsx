@@ -5,39 +5,48 @@ import { AuthContext } from "@providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../../ui/modal";
 import LogoutIcon from "@mui/icons-material/Logout";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import {authApi} from "@services/api";
+import { authApi } from "@services/api";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+
 const Header = () => {
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
-  const [isOpen, setIsOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  
 
-  const handleOpenOptions = () => {
-    setIsOpen(!isOpen);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+
+  const open = Boolean(anchorEl);
+
+  const handleOpenOptions = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
- const handleLogout = () => {
-    setIsOpen(false);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    handleClose();
     setOpenModal(true);
   };
+
   const confirmLogout = async () => {
     try {
-  
-      await authApi.logout(); 
+      await authApi.logout();
     } catch (error) {
       console.error("Lỗi khi gọi API logout:", error);
     } finally {
-    
-      logout(); 
+      logout();
       setOpenModal(false);
       navigate("/dang-nhap");
     }
   };
+
   const handleProfileClick = () => {
-    setIsOpen(false);
+    handleClose();
     navigate("/admin/profile");
   };
 
@@ -56,11 +65,12 @@ const Header = () => {
         </div>
       </div>
 
-      <div className={styles.right} onClick={handleOpenOptions}>
+      {/* CLICK VÀO AVATAR MỞ DROPDOWN */}
+      <div className={styles.right}>
         <div className={styles.headerIcon}>
           <FaBell />
         </div>
-        <div className={styles.profile}>
+        <div className={styles.profile} onClick={handleOpenOptions}>
           <div className={styles.avatar}>
             <img src={user?.avatarUrl} alt="" />
           </div>
@@ -70,19 +80,43 @@ const Header = () => {
           </div>
         </div>
       </div>
-      {isOpen && (
-        <div className={styles.options__admin}>
-          <div className={styles.options__item} onClick={handleProfileClick}>
-            <AccountCircleIcon />
-            <span>Profile</span>
-          </div>
 
-          <div className={styles.options__item}>
-            <LogoutIcon />
-            <span onClick={handleLogout}>Đăng xuất</span>
-          </div>
-        </div>
-      )}
+      {/* --- MENU DROPDOWN --- */}
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            minWidth: 220, // rộng hơn
+          },
+        }}
+        MenuListProps={{
+          sx: {
+            "& .MuiMenuItem-root": {
+              fontSize: "1rem",
+              padding: "12px 20px", // item cao và dễ bấm hơn
+              gap: "12px", // icon - text cách nhau
+            },
+
+            "& .MuiSvgIcon-root": {
+              fontSize: "1.5rem", // icon to hơn
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={handleProfileClick}>
+          <AccountCircleOutlinedIcon />
+          Profile
+        </MenuItem>
+
+        <MenuItem onClick={handleLogout}>
+          <LogoutIcon />
+          Đăng xuất
+        </MenuItem>
+      </Menu>
+
+      {/* MODAL XÁC NHẬN */}
       {openModal && (
         <Modal
           open={openModal}

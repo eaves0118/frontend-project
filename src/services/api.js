@@ -1,85 +1,66 @@
 import axiosClient from "./axiosClient";
 
+/* ============================
+   AUTH API
+============================ */
 export const authApi = {
-  async login(data) {
-    const res = await axiosClient.post("/auth/login", data);
-    return res;
-  },
-  async register(data) {
-    const res = await axiosClient.post("/auth/register", data);
-    console.log(res);
-    return res;
-  },
-  async refreshToken() {
-    const res = await axiosClient.post("/auth/refresh");
-    return res;
-  },
+  login: (data) => axiosClient.post("/auth/login", data),
 
-  async logout() {
-    return axiosClient.post("/auth/logout");
-  },
+  register: (data) => axiosClient.post("/auth/register", data),
 
-  async getMe() {
-    const res = await axiosClient.get("/");
-    return res;
-  },
+  refreshToken: () => axiosClient.post("/auth/refresh"),
+
+  logout: () => axiosClient.post("/auth/logout"),
+
+  getMe: () => axiosClient.get("/auth/me"), // ❗ Chuẩn REST hơn "/"
 };
 
+/* ============================
+   DOCTOR API
+============================ */
 export const doctorApi = {
-  async getAll() {
-    const res = await axiosClient.get("/doctors");
-    return res.data;
-  },
+  getAll: () => axiosClient.get("/doctors"),
 
-  async create(data) {
-    return axiosClient.post("/admin/doctors", data);
-  },
+  create: (data) => axiosClient.post("/admin/doctors", data),
 
-  async delete(id) {
-    return await axiosClient.delete(`/admin/users/${id}`);
-  },
+  update: (id, data) => axiosClient.put(`/admin/doctors/${id}`, data),
 
-  async update(id, data) {
-    return await axiosClient.put(`/admin/doctors/${id}`, data);
-  },
-
-  async getById(id) {
-    return axiosClient.get(`/users/${id}`);
-  },
+  delete: (id) => axiosClient.delete(`/admin/users/${id}`), // xoá user bác sĩ
 };
 
-export const adminApi = {
-  async getAdmin() {
-    const res = await axiosClient.get(`/admin/doctors/U003`);
-    return res;
-  },
-};
-
+/* ============================
+   PATIENT API
+============================ */
 export const patientApi = {
-  async getAll() {
-    const res = await axiosClient.get("/patients");
-    return res;
-  },
-  async delete(id) {
-    return await axiosClient.delete(`/admin/users/${id}`);
-  },
+  getAll: () => axiosClient.get("/patients"),
+
+  delete: (id) => axiosClient.delete(`/admin/users/${id}`), // xoá user bệnh nhân
 };
 
+/* ============================
+   SPECIALIZATION API
+============================ */
 export const specApi = {
-  async getAll() {
-    const res = await axiosClient.get("/specializations");
-    return res;
-  }
+  getAll: () => axiosClient.get("/specializations"),
 };
 
+/* ============================
+   ADMIN API (nếu cần)
+============================ */
+export const adminApi = {
+  getAdmin: () => axiosClient.get("/admin/doctors/U003"),
+};
+
+/* ============================
+   UPLOAD API
+============================ */
 export const uploadApi = {
   uploadImage(file) {
     const formData = new FormData();
     formData.append("file", file);
+
     return axiosClient.post("/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      headers: { "Content-Type": "multipart/form-data" },
     });
   },
 };
