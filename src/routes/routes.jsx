@@ -12,6 +12,7 @@ import AboutUsPage from "@pages/Client/AboutUsPage/AboutUsPage";
 import Login from "../pages/Auth/Login/Login";
 import Register from "../pages/Auth/Register/Register";
 import ProtectRoutes from "./ProtectRoutes";
+import Profile from "../pages/Admin/Profile/Profile";
 const routes = [
   {
     path: "/",
@@ -34,6 +35,7 @@ const routes = [
 
     children: [
       { path: "bang-dieu-khien", element: <Dashboard /> },
+      { path: "profile", element: <Profile /> },
       { path: "benh-nhan", element: <Patients /> },
       { path: "bac-si", element: <Doctors /> },
       { path: "lich-lam-viec", element: <Schedule /> },
