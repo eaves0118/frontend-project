@@ -15,6 +15,7 @@ import ProtectRoutes from "./ProtectRoutes";
 import Profile from "../pages/Admin/Profile/Profile";
 import DoctorDetail from "../pages/Client/DoctorPage/DoctorDetail";
 import ProfilePatient from "../pages/Client/Profile/ProfilePatient";
+import Specialty from "../pages/Admin/Specialty/Specialty";
 const routes = [
   {
     path: "/",
@@ -41,6 +42,7 @@ const routes = [
       { path: "bang-dieu-khien", element: <Dashboard /> },
       { path: "profile", element: <Profile /> },
       { path: "benh-nhan", element: <Patients /> },
+      { path: "chuyen-khoa", element: <Specialty /> },
       { path: "bac-si", element: <Doctors /> },
       { path: "lich-lam-viec", element: <Schedule /> },
       { path: "bao-cao", element: <Reports /> },
