@@ -27,6 +27,7 @@ import { LoadingButton } from "@mui/lab";
 import { AuthContext } from "../../../providers/AuthProvider";
 import { patientApi, uploadApi } from "@services/api";
 import { getImageUrl } from "@utils/imageHelper";
+import { formatDate } from "../../../utils/formatDate";
 
 const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -42,12 +43,11 @@ const Profile = () => {
   });
   const [avatarFile, setAvatarFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-
-  const formatDate = (isoString) => {
-    if (!isoString) return "";
-    return isoString.split("T")[0];
-  }
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   useEffect(() => {
     fetchProfile();
@@ -58,7 +58,7 @@ const Profile = () => {
       const res = await patientApi.getById("me");
       console.log(res);
       const data = res.data || res;
-      
+
       setProfileData(data);
       setFormData({
         fullName: data.fullName || "",
@@ -86,7 +86,7 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
@@ -104,11 +104,15 @@ const Profile = () => {
         showSnackbar("Chức năng chưa hỗ trợ cho vai trò này", "info");
         return;
       }
-      const updatedUser = { ...user, fullName: formData.fullName, avatarUrl: newAvatarUrl };
+      const updatedUser = {
+        ...user,
+        fullName: formData.fullName,
+        avatarUrl: newAvatarUrl,
+      };
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
       showSnackbar("Cập nhật hồ sơ thành công!", "success");
-      setProfileData(prev => ({ ...prev, ...payload }));
+      setProfileData((prev) => ({ ...prev, ...payload }));
     } catch (err) {
       showSnackbar(err.response?.data?.message || "Cập nhật thất bại", "error");
     } finally {
@@ -126,7 +130,12 @@ const Profile = () => {
         <Box display="flex" flexDirection={{ xs: "column", md: "row" }} gap={4}>
           <Box flex={{ xs: "0 0 100%", md: "0 0 340px" }}>
             <Paper sx={{ p: 4, textAlign: "center", borderRadius: 3 }}>
-              <Skeleton variant="circular" width={160} height={160} sx={{ mx: "auto" }} />
+              <Skeleton
+                variant="circular"
+                width={160}
+                height={160}
+                sx={{ mx: "auto" }}
+              />
               <Skeleton height={40} width="80%" sx={{ mx: "auto", mt: 3 }} />
               <Skeleton height={30} width="60%" sx={{ mx: "auto", mt: 1 }} />
             </Paper>
@@ -154,11 +163,11 @@ const Profile = () => {
         gap={{ xs: 3, md: 5 }}
         alignItems="flex-start"
       >
-        <Box
-          flex={{ xs: "0 0 100%", md: "0 0 340px" }}
-          width="100%"
-        >
-          <Paper elevation={6} sx={{ p: 4, textAlign: "center", borderRadius: 4, height: "100%" }}>
+        <Box flex={{ xs: "0 0 100%", md: "0 0 340px" }} width="100%">
+          <Paper
+            elevation={6}
+            sx={{ p: 4, textAlign: "center", borderRadius: 4, height: "100%" }}
+          >
             <Box position="relative" display="inline-flex">
               <Avatar
                 src={previewUrl || "/default-avatar.png"}
@@ -171,7 +180,13 @@ const Profile = () => {
                   boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
                 }}
               />
-              <input accept="image/*" id="avatar-upload" type="file" hidden onChange={handleAvatarChange} />
+              <input
+                accept="image/*"
+                id="avatar-upload"
+                type="file"
+                hidden
+                onChange={handleAvatarChange}
+              />
               <label htmlFor="avatar-upload">
                 <IconButton
                   component="span"
@@ -184,7 +199,10 @@ const Profile = () => {
                     width: 48,
                     height: 48,
                     boxShadow: 4,
-                    "&:hover": { bgcolor: "primary.dark", transform: "scale(1.1)" },
+                    "&:hover": {
+                      bgcolor: "primary.dark",
+                      transform: "scale(1.1)",
+                    },
                     transition: "all 0.2s",
                   }}
                 >
@@ -200,7 +218,11 @@ const Profile = () => {
               {formData.email}
             </Typography>
             <Chip
-              label={user.userType === "patient" ? "BỆNH NHÂN" : user.userType?.toUpperCase()}
+              label={
+                user.userType === "patient"
+                  ? "BỆNH NHÂN"
+                  : user.userType?.toUpperCase()
+              }
               color="primary"
               variant="outlined"
               sx={{ mt: 2, fontWeight: "bold", fontSize: "0.9rem", px: 2 }}
@@ -215,7 +237,11 @@ const Profile = () => {
             </Typography>
 
             <Stack spacing={3.5}>
-              <Box display="grid" gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr" }} gap={3}>
+              <Box
+                display="grid"
+                gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr" }}
+                gap={3}
+              >
                 <TextField
                   label="Họ và tên"
                   name="fullName"
@@ -232,7 +258,11 @@ const Profile = () => {
                   onChange={handleInputChange}
                   fullWidth
                   InputProps={{
-                    startAdornment: <InputAdornment position="start"><Email /></InputAdornment>,
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Email />
+                      </InputAdornment>
+                    ),
                   }}
                 />
 
@@ -245,7 +275,11 @@ const Profile = () => {
                       onChange={handleInputChange}
                       fullWidth
                       InputProps={{
-                        startAdornment: <InputAdornment position="start"><Phone /></InputAdornment>,
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Phone />
+                          </InputAdornment>
+                        ),
                       }}
                     />
                     <TextField
@@ -257,7 +291,11 @@ const Profile = () => {
                       InputLabelProps={{ shrink: true }}
                       fullWidth
                       InputProps={{
-                        startAdornment: <InputAdornment position="start"><Cake /></InputAdornment>,
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Cake />
+                          </InputAdornment>
+                        ),
                       }}
                     />
                     <TextField
@@ -269,7 +307,11 @@ const Profile = () => {
                       onChange={handleInputChange}
                       fullWidth
                       InputProps={{
-                        startAdornment: <InputAdornment position="start"><Transgender /></InputAdornment>,
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Transgender />
+                          </InputAdornment>
+                        ),
                       }}
                     >
                       <option value="">Chọn giới tính</option>
@@ -285,11 +327,16 @@ const Profile = () => {
                 <>
                   <Divider />
                   <Box>
-                    <Typography fontWeight="bold" color="text.primary" gutterBottom>
+                    <Typography
+                      fontWeight="bold"
+                      color="text.primary"
+                      gutterBottom
+                    >
                       Hồ sơ y tế
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Tính năng chỉnh sửa bệnh sử, dị ứng, tiền sử bệnh đang được phát triển...
+                      Tính năng chỉnh sửa bệnh sử, dị ứng, tiền sử bệnh đang
+                      được phát triển...
                     </Typography>
                   </Box>
                 </>
@@ -323,10 +370,14 @@ const Profile = () => {
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
-        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert severity={snackbar.severity} variant="filled" onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}>
+        <Alert
+          severity={snackbar.severity}
+          variant="filled"
+          onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>
