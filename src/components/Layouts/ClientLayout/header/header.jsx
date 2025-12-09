@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
+
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
@@ -16,13 +17,12 @@ import { Link } from "react-router-dom";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { AuthContext } from "../../../../providers/AuthProvider";
 import Modal from "../../../ui/modal";
-import PersonOutline from '@mui/icons-material/PersonOutline';
-import Settings from '@mui/icons-material/Settings';
-import ExitToApp from '@mui/icons-material/ExitToApp';
+import PersonOutline from "@mui/icons-material/PersonOutline";
+import Settings from "@mui/icons-material/Settings";
+import ExitToApp from "@mui/icons-material/ExitToApp";
 
 const pages = [
   { content: "Đội ngũ bác sĩ", to: "/doi-ngu-bac-si" },
-
   {
     content: "Dịch vụ",
     children: [
@@ -34,29 +34,26 @@ const pages = [
   { content: "Liên hệ", to: "/lien-he" },
 ];
 
+// ⚠️ Sửa key trùng, dùng id
 const settings = [
-
-  { label: "Profile", to: "/profile" },
-  { label: "Dashboard", to: "/dashboard" },
-  { label: "Account", to: "/account" },
-  { label: "Đăng xuất", action: "logout" },
-
   {
-    label: 'Hồ sơ',
-    to: '/profile',
+    id: 1,
+    label: "Hồ sơ",
+    to: "/profile",
     icon: <PersonOutline fontSize="small" />,
   },
   {
-    label: 'Cài đặt',
-    to: '/settings',
+    id: 2,
+    label: "Cài đặt",
+    to: "/settings",
     icon: <Settings fontSize="small" />,
   },
   {
-    label: 'Đăng xuất',
-    action: 'logout',
+    id: 3,
+    label: "Đăng xuất",
+    action: "logout",
     icon: <ExitToApp fontSize="small" />,
     danger: true,
-    dividerAfter: true,
   },
 ];
 
@@ -129,12 +126,11 @@ const Header = () => {
               >
                 <MenuIcon />
               </IconButton>
+
               <Menu
                 anchorEl={anchorElNav}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                transformOrigin={{ vertical: "top", horizontal: "left" }}
               >
                 {pages.map((page, index) =>
                   page.children ? (
@@ -144,7 +140,6 @@ const Header = () => {
                           {page.content}
                         </Typography>
                       </MenuItem>
-
                       {page.children.map((child, i) => (
                         <MenuItem
                           key={i}
@@ -192,6 +187,7 @@ const Header = () => {
               LOGO
             </Typography>
 
+            {/* Menu Desktop */}
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page, index) =>
                 page.children ? (
@@ -202,13 +198,8 @@ const Header = () => {
                     onMouseLeave={handleCloseMegaMenu}
                   >
                     <Button
+                      sx={{ my: 2, display: "flex", gap: 0.5 }}
                       color="inherit"
-                      sx={{
-                        my: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 0.5,
-                      }}
                     >
                       {page.content} <ArrowDropDownIcon fontSize="small" />
                     </Button>
@@ -241,9 +232,7 @@ const Header = () => {
                               textTransform: "none",
                               px: 0,
                               color: "text.primary",
-                              "&:hover": {
-                                bgcolor: "action.hover",
-                              },
+                              "&:hover": { bgcolor: "action.hover" },
                             }}
                           >
                             {child.content}
@@ -265,6 +254,7 @@ const Header = () => {
               )}
             </Box>
 
+            {/* User menu */}
             <Box sx={{ flexGrow: 0 }}>
               {!isLoggedIn ? (
                 <>
@@ -278,43 +268,33 @@ const Header = () => {
               ) : (
                 <>
                   <Tooltip title="Mở cài đặt">
-                    {/* THAY THẾ IconButton BẰNG Button MUI */}
                     <Button
                       onClick={handleOpenUserMenu}
                       sx={{
-                        // Đảm bảo nút không có nền và sử dụng màu của Header
                         color: "inherit",
-                        textTransform: "none", // Bỏ chữ viết hoa
-                        minWidth: "auto", // Đảm bảo nút không quá rộng
-                        p: 1, // Padding nhẹ quanh Avatar + Tên
+                        textTransform: "none",
+                        minWidth: "auto",
+                        p: 1,
                         borderRadius: 2,
-
-                        // Căn chỉnh nội dung (Avatar và Typography)
                         display: "flex",
                         alignItems: "center",
                         gap: 1,
-
-                        // Hiệu ứng hover chuẩn
-                        "&:hover": {
-                          bgcolor: "rgba(255, 255, 255, 0.15)",
-                        },
+                        "&:hover": { bgcolor: "rgba(255,255,255,0.15)" },
                       }}
                     >
                       <Avatar
-                        alt={user?.fullName || "User"}
+                        alt={user?.fullName}
                         src={user?.avatarUrl}
-                        sx={{ width: 32, height: 32 }} 
+                        sx={{ width: 32, height: 32 }}
                       >
                         {userInitials}
                       </Avatar>
 
                       <Typography
-                        component="span"
                         sx={{
                           display: { xs: "none", md: "block" },
                           fontWeight: 500,
                           color: "inherit",
-                          lineHeight: 1,
                         }}
                       >
                         Hi! {user.fullName}
@@ -332,67 +312,55 @@ const Header = () => {
                   >
                     {settings.map((item) => (
                       <MenuItem
-                        key={item.label}
+                        key={item.id}
                         component={item.to ? Link : "div"}
                         to={item.to || undefined}
-
-                        onClick={() => item.action === "logout" && setOpenLogoutModal(true)}
-                      >
-                        <Typography textAlign="center" sx={{ width: "100%" }}>
-                          {item.label}
-                        </Typography>
                         onClick={(e) => {
                           if (item.action === "logout") {
                             e.preventDefault();
                             setOpenLogoutModal(true);
+                          } else {
+                            handleCloseUserMenu();
                           }
                         }}
                         sx={{
                           py: 1.2,
                           px: 2,
-                          transition: 'all 0.2s ease',
-                          '&:hover': {
-                            transform: 'translateX(4px)',
-                            backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                          transition: "all 0.2s ease",
+                          "&:hover": {
+                            transform: "translateX(4px)",
+                            backgroundColor: "rgba(25,118,210,0.08)",
                           },
-                          '&:active': {
-                            backgroundColor: 'rgba(25, 118, 210, 0.12)',
-                          }
+                          "&:active": {
+                            backgroundColor: "rgba(25,118,210,0.12)",
+                          },
                         }}
                       >
-                        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: "100%",
+                          }}
+                        >
                           {item.icon && (
-                            <Box sx={{
-                              mr: 2,
-                              color: 'text.secondary',
-                              display: 'flex',
-                              alignItems: 'center'
-                            }}>
+                            <Box
+                              sx={{
+                                mr: 2,
+                                color: "text.secondary",
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
                               {item.icon}
                             </Box>
                           )}
+
                           <Typography
-                            variant="body2"
-                            sx={{
-                              flexGrow: 1,
-                              fontSize: '0.875rem',
-                              color: 'text.primary'
-                            }}
+                            sx={{ flexGrow: 1, fontSize: "0.875rem" }}
                           >
                             {item.label}
                           </Typography>
-                          {item.shortcut && (
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                ml: 2,
-                                color: 'text.secondary',
-                                fontSize: '0.75rem'
-                              }}
-                            >
-                              {item.shortcut}
-                            </Typography>
-                          )}
                         </Box>
                       </MenuItem>
                     ))}
@@ -404,7 +372,7 @@ const Header = () => {
         </Container>
       </AppBar>
 
-      {/* Modal xác nhận Logout */}
+      {/* Logout Modal */}
       <Modal
         open={openLogoutModal}
         onClose={() => setOpenLogoutModal(false)}
