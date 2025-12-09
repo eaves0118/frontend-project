@@ -43,7 +43,7 @@ const Login = () => {
         toast.success("Đăng nhập thành công");
         console.log(user);
         if (user && user.userType === "admin") {
-          navigate("/admin");
+          navigate("/admin/bang-dieu-khien");
         } else {
           navigate("/");
         }

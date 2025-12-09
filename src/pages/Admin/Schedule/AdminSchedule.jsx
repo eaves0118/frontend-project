@@ -43,6 +43,7 @@ const AdminSchedule = () => {
       setLoading(true);
       const res = await doctorApi.getAll();
       setDoctors(res.data || res);
+      console.log(res);
     } catch (error) {
       console.error("Failed to fetch doctors", error);
     } finally {
