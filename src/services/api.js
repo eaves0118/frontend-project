@@ -36,7 +36,9 @@ export const doctorApi = {
 export const patientApi = {
   getAll: () => axiosClient.get("/patients"),
 
-  delete: (id) => axiosClient.delete(`/admin/users/${id}`), // xoá user bệnh nhân
+  delete: (id) => axiosClient.delete(`/admin/users/${id}`),
+  
+  getbyId: (id) => axiosClient.get(`/users/${id}`)// xoá user bệnh nhân
 };
 
 /* ============================
